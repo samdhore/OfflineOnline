@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 public class Home extends AppCompatActivity {
     //this is burad
+    //this is sampada
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
