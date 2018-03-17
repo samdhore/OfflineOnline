@@ -7,7 +7,10 @@ public class Home extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
+        System.out.println("Technodart");//Anjali
         setContentView(R.layout.activity_home);
     }
 }
