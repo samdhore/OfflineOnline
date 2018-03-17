@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1078265021705",
+    "firebase_url": "https://offlineonline-23a75.firebaseio.com",
+    "project_id": "offlineonline-23a75",
+    "storage_bucket": "offlineonline-23a75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078265021705:android:7fc5a52bbbbade8c",
+        "android_client_info": {
+          "package_name": "tecnodart.com.offlineonline"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078265021705-c3idjqqpfuecuspbki9fbq0osqakg8g1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tecnodart.com.offlineonline",
+            "certificate_hash": "1ff48c3fabf62735960c3ad4f7d06a645f8f4453"
+          }
+        },
+        {
+          "client_id": "1078265021705-gmh9j577i4533vgd9dngt0b7f50bctsj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhhvVbn-245IRUXAXTEdicxJjIr_CzLF8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078265021705-gmh9j577i4533vgd9dngt0b7f50bctsj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
