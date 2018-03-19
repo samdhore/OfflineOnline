@@ -59,5 +59,7 @@
         android:text="@string/forgot_password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toEndOf="@+id/password" />
+        app:layout_constraintStart_toEndOf="@+id/password"
+
+        />
 </android.support.constraint.ConstraintLayout>
