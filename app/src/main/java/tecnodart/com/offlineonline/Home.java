@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Home extends AppCompatActivity {
+    //the spelling of technodart is wrong
     private FirebaseAuth mAuth;
     private final String TAG="technodart";
     View finView;
