@@ -64,7 +64,7 @@ public class Home extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(Home.this, "Authentication successful.",
                                     Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(finView.getContext(), Navigation.class);
+                            Intent intent = new Intent(finView.getContext(), AfterLoginHome.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
