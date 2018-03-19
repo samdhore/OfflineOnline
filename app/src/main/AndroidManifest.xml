@@ -18,9 +18,9 @@
         </activity>
         <activity android:name=".Register" />
         <activity
-            android:name=".Navigation"
-            android:label="@string/title_activity_navigation"
-            ></activity>
+            android:name=".AfterLoginHome"
+            android:label="@string/title_activity_after_login_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
