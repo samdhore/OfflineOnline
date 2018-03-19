@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class Home extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private final String TAG="technodart";
     View finView;
+    Button forget;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -27,15 +29,15 @@ public class Home extends AppCompatActivity {
        // System.out.println("Technodart");//Anjali
         setContentView(R.layout.activity_home);
         mAuth = FirebaseAuth.getInstance();
-        //Pull request TEST... by Ashutosh Singh
-
-        //Pull request 2.0... by Ashutosh Singh
-
-        //pull request Test..by Shital Ghanwat
-
-        //pull request test..by shubham burad
+        forget = findViewById(R.id.forgotPasswordBtn);
 
 
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Home.this , ForgetActivity.class));
+            }
+        });
 
     }
     protected void login(View view)
