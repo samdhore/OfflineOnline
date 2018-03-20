@@ -9,10 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Register" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/app_name"
+            android:name=".AfterLoginHome"
+            android:label="UBI Quotes"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,11 +20,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ForgetActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity android:name=".LoginActivity" />
 
-        <activity
-            android:name=".AfterLoginHome"
-            android:label="@string/title_activity_after_login_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

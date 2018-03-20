@@ -3,6 +3,8 @@ package tecnodart.com.offlineonline;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -81,18 +83,32 @@ AfterLoginHome extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        Fragment f = null;
 
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.home_fragment) {
+            f = new Home();
+        } else if (id == R.id.create_ration) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.ration_management) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.ration_interface) {
 
+        } else if (id == R.id.minimum_prize) {
+
+        } else if (id == R.id.e_mandi) {
+
+        } else if (id == R.id.share) {
+
+        } else if (id == R.id.about_fragment) {
+
+        }
+
+
+        if (f != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_after_login_home, f);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
