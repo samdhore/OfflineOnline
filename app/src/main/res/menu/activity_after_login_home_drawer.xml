@@ -9,18 +9,8 @@
             android:icon="@drawable/home"
             android:title="Home" />
 
-        <item
-            android:id="@+id/create_ration"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Create Ration Card" />
-        <item
-            android:id="@+id/ration_management"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Ration Management" />
-        <item
-            android:id="@+id/ration_interface"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Ration Interface" />
+
+
         <item
             android:id="@+id/minimum_prize"
             android:icon="@drawable/ic_menu_camera"

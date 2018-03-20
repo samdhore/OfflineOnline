@@ -87,16 +87,14 @@ AfterLoginHome extends AppCompatActivity
         Fragment f = null;
 
         if (id == R.id.home_fragment) {
+
             f = new Home();
-        } else if (id == R.id.create_ration) {
-
-        } else if (id == R.id.ration_management) {
-
-        } else if (id == R.id.ration_interface) {
 
         } else if (id == R.id.minimum_prize) {
+            f = new MinimumSupportPrice();
 
         } else if (id == R.id.e_mandi) {
+            f = new EMandi();
 
         } else if (id == R.id.share) {
 
