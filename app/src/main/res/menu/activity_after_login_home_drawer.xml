@@ -2,8 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_top">
+<item
+    android:id="@+id/notifications"
+    android:icon="@drawable/notific"
+    android:title="My notifications"/>
+    </group>
+    <group android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/home_fragment"
             android:icon="@drawable/home"
@@ -13,12 +20,24 @@
 
         <item
             android:id="@+id/minimum_prize"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/rupee"
             android:title="Minimum Support Prize" />
         <item
             android:id="@+id/e_mandi"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/mandi"
             android:title="E Mandi" />
+        <item
+            android:id="@+id/weather_forecast"
+            android:icon="@drawable/weather"
+            android:title="Weather Forecast"/>
+        <item
+            android:id="@+id/scheme"
+            android:icon="@drawable/scheme"
+            android:title="Schemes for me"/>
+        <item
+            android:id="@+id/faq"
+            android:icon="@drawable/faq"
+            android:title="FAQs"/>
     </group>
 
     <item android:title="Communicate">
