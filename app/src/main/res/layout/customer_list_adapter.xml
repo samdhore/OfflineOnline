@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="3dp"
-        android:text="Commodity"
+        android:text="Commodity :"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="@+id/textView4" />
@@ -32,19 +31,10 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:text="Price :"
         app:layout_constraintBottom_toBottomOf="@+id/commodity"
-        app:layout_constraintStart_toEndOf="@+id/commodity"
+        app:layout_constraintStart_toStartOf="@+id/textView20"
         app:layout_constraintTop_toTopOf="@+id/commodity" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="195dp"
-        tools:layout_editor_absoluteY="45dp" />
 
     <TextView
         android:id="@+id/price"
