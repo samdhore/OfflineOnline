@@ -46,7 +46,6 @@ public class MarketPriceDetails extends AppCompatActivity {
     String[] cityname = { "nagpur", "pune", };
     String cit;
     Spinner cityn;
-    String det;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -56,8 +55,6 @@ public class MarketPriceDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_price_details);
         Intent i = getIntent();
-        det =i.getStringExtra("det");
-        Toast.makeText(this, det, Toast.LENGTH_SHORT).show();
 
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
@@ -79,23 +76,29 @@ public class MarketPriceDetails extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 //Toast.makeText(EducationDetailUpload.this, boardname[i], Toast.LENGTH_LONG).show();
                 cit = cityname[i];
-                mDatabase= FirebaseDatabase.getInstance().getReference().child("fareprice").child(cit).child(det);
+                mDatabase= FirebaseDatabase.getInstance().getReference().child("fareprice").child(cit);
 
+                ca = new customadapter(MarketPriceDetails.this, commm,pricc, quann );
 
                dialog = ProgressDialog.show(MarketPriceDetails.this, "",
                         "Loading. Please wait...", true);
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot ) {
+                        commm.clear();
+                        pricc.clear();
+                        quann.clear();
+                        ca.add(pricc , commm, quann);
+                            for(DataSnapshot gr:dataSnapshot.getChildren()) {
+                                // String useridstr = usrid.getKey();
 
-                            // String useridstr = usrid.getKey();
-                            dt = dataSnapshot.getValue(PriceDetail.class);
-                            if (dt != null) {
-                                commm.add(dt.getCommodity());
-                                pricc.add(dt.getPrice());
-                                quann.add(dt.getQuantity());
+                                dt = gr.getValue(PriceDetail.class);
+                                if (dt != null) {
+                                    commm.add(dt.getCommodity());
+                                    pricc.add(dt.getPrice());
+                                    quann.add(dt.getQuantity());
+                                }
                             }
-
                         dialog.dismiss();
                         ca = new customadapter(MarketPriceDetails.this, commm,pricc, quann );
                         list.setAdapter(ca);
@@ -131,10 +134,10 @@ public class MarketPriceDetails extends AppCompatActivity {
 
 
 
-        public void add(String prices, String commoditys, String quantitys) {
-            commodity.add(prices);
-            quantity.add(quantitys);
-            price.add(commoditys);
+        public void add(ArrayList<String> prices, ArrayList<String> commoditys, ArrayList<String> quantitys) {
+            this.commodity = commoditys;
+            this.price= prices;
+            this.quantity=quantitys;
 
             notifyDataSetChanged();
         }
