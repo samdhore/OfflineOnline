@@ -19,11 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".ForgetActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".LoginActivity" />
-
+        <activity android:name=".MarketPriceDetails"></activity>
     </application>
 
 </manifest>
