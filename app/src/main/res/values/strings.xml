@@ -20,4 +20,11 @@
     <string name="password2">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="title_activity_after_login_home">AfterLoginHome</string>
+    <string-array name="commodity_array">
+        <item>Gram</item>
+        <item>Paddy</item>
+        <item>Sugarcane</item>
+        <item>Wheat</item>
+    </string-array>
+
 </resources>
