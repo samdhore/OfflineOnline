@@ -2,12 +2,19 @@ package tecnodart.com.offlineonline;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +44,16 @@ public class MarketPriceDetails extends AppCompatActivity {
 
 
     int i=0, f1=0, f2=0;
+    static int f3 = 0;
     ProgressDialog dialog;
     customadapter ca;
     PriceDetail dt;
     ListView list;
     int flag=0;
-    ArrayList<String> commm , pricc, quann ;
+    ArrayList<String> commm , pricc, remained, arrived ;
     String[] cityname = { "nagpur", "pune", };
-    String cit;
+    String cit, add;
+    static String msg;
     Spinner cityn;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
@@ -61,7 +70,9 @@ public class MarketPriceDetails extends AppCompatActivity {
 
         commm = new ArrayList<>();
         pricc = new ArrayList<>();
-        quann = new ArrayList<>();
+        remained = new ArrayList<>();
+        arrived = new ArrayList<>();
+
         cit = cityname[0];
         list = findViewById(R.id.listdone);
 
@@ -78,17 +89,23 @@ public class MarketPriceDetails extends AppCompatActivity {
                 cit = cityname[i];
                 mDatabase= FirebaseDatabase.getInstance().getReference().child("fareprice").child(cit);
 
-                ca = new customadapter(MarketPriceDetails.this, commm,pricc, quann );
+                ca = new customadapter(MarketPriceDetails.this, commm,pricc, remained );
 
                dialog = ProgressDialog.show(MarketPriceDetails.this, "",
                         "Loading. Please wait...", true);
+                if (isOnline()) {
+
+
+                    Toast.makeText(MarketPriceDetails.this, "You are connected to Internet", Toast.LENGTH_SHORT).show();
+
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot ) {
                         commm.clear();
                         pricc.clear();
-                        quann.clear();
-                        ca.add(pricc , commm, quann);
+                        remained.clear();
+                        arrived.clear();
+                        ca.add(pricc , commm, remained);
                             for(DataSnapshot gr:dataSnapshot.getChildren()) {
                                 // String useridstr = usrid.getKey();
 
@@ -96,11 +113,12 @@ public class MarketPriceDetails extends AppCompatActivity {
                                 if (dt != null) {
                                     commm.add(dt.getCommodity());
                                     pricc.add(dt.getPrice());
-                                    quann.add(dt.getQuantity());
+                                    remained.add(dt.getRemained());
+                                    arrived.add(dt.getArrived());
                                 }
                             }
                         dialog.dismiss();
-                        ca = new customadapter(MarketPriceDetails.this, commm,pricc, quann );
+                        ca = new customadapter(MarketPriceDetails.this, commm,pricc, remained );
                         list.setAdapter(ca);
                     }
 
@@ -110,6 +128,11 @@ public class MarketPriceDetails extends AppCompatActivity {
                     }
 
                 });
+                } else {
+                    sendSMS("7028499108", cit);
+                    Toast.makeText(MarketPriceDetails.this, "You are not connected to Internet", Toast.LENGTH_SHORT).show();
+
+                }
             }
 
             @Override
@@ -119,10 +142,70 @@ public class MarketPriceDetails extends AppCompatActivity {
         });
 
 
+
     }
 
 
+    //Broadcast receiver
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase("otp")) {
+                final String message = intent.getStringExtra("message");
+                final String sender = intent.getStringExtra("sender");
+                dialog.dismiss();
+                commm.clear();
+                pricc.clear();
+                remained.clear();
+                arrived.clear();
+                ca.add(pricc , commm, remained);
+                String[] arr = message.split(" " );
+
+                for(int j=2,k=3,l=4,m=5 ;j< arr.length; j=j+5,k=k+5,l=l+5,m=m+5 ){
+
+                    commm.add(arr[j]);
+                    pricc.add(arr[k]);
+                    remained.add(arr[l]);
+                    arrived.add(arr[m]);
+
+
+                }
+                ca = new customadapter(MarketPriceDetails.this, commm,pricc, remained );
+                list.setAdapter(ca);
+
+
+            }   // sendSMS(sender,sms_send.toString());
+        }
+    };
+    @Override
+    public void onResume() {
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(receiver, new IntentFilter("otp"));
+        super.onResume();
+    }
+
+    protected boolean isOnline() {
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void sendSMS(String phoneNumber, String message) {
+        Toast.makeText(MarketPriceDetails.this, "in sendSMS", Toast.LENGTH_SHORT).show();
+
+
+        SmsManager sms = SmsManager.getDefault();
+
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
+
+    }
 
     class customadapter extends BaseAdapter {
 
@@ -215,4 +298,5 @@ public class MarketPriceDetails extends AppCompatActivity {
 
 
     }
+
 }
