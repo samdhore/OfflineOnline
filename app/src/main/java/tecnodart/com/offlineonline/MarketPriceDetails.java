@@ -255,27 +255,5 @@ public class MarketPriceDetails extends AppCompatActivity {
 
 
     }
-    public class SmsReceiver extends BroadcastReceiver {
-        private static final String Tag="Message Receivied";
 
-        public void onReceive(Context context, Intent intent) {
-            final Bundle pdubundle = intent.getExtras();
-
-            Object[]  pdus=(Object[])pdubundle.get("pdus");
-
-            SmsMessage message=SmsMessage.createFromPdu((byte[])pdus[0]);
-            //  Toast.makeText(context,"sms rec from"+message.getOriginatingAddress()+message.getMessageBody(),Toast.LENGTH_LONG).show();
-
-            // tv.setText(add + num);
-
-            msg =message.getMessageBody();
-            func(msg);
-            f3=1;
-            // Toast.makeText(context,"sms rec from"+message.getOriginatingAddress()+message.getMessageBody(),Toast.LENGTH_LONG).show();
-
-        }
-    }
-    public void func(String mm){
-
-    }
 }
