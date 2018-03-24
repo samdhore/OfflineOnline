@@ -2,12 +2,17 @@ package tecnodart.com.offlineonline;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +42,7 @@ public class MarketPriceDetails extends AppCompatActivity {
 
 
     int i=0, f1=0, f2=0;
+    static int f3 = 0;
     ProgressDialog dialog;
     customadapter ca;
     PriceDetail dt;
@@ -44,7 +50,8 @@ public class MarketPriceDetails extends AppCompatActivity {
     int flag=0;
     ArrayList<String> commm , pricc, quann ;
     String[] cityname = { "nagpur", "pune", };
-    String cit;
+    String cit, add;
+    static String msg;
     Spinner cityn;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabase;
@@ -82,6 +89,11 @@ public class MarketPriceDetails extends AppCompatActivity {
 
                dialog = ProgressDialog.show(MarketPriceDetails.this, "",
                         "Loading. Please wait...", true);
+                if (isOnline()) {
+
+
+                    Toast.makeText(MarketPriceDetails.this, "You are connected to Internet", Toast.LENGTH_SHORT).show();
+
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot ) {
@@ -96,7 +108,7 @@ public class MarketPriceDetails extends AppCompatActivity {
                                 if (dt != null) {
                                     commm.add(dt.getCommodity());
                                     pricc.add(dt.getPrice());
-                                    quann.add(dt.getQuantity());
+                                    quann.add(dt.getRemained());
                                 }
                             }
                         dialog.dismiss();
@@ -110,6 +122,13 @@ public class MarketPriceDetails extends AppCompatActivity {
                     }
 
                 });
+                } else {
+                    sendSMS("9013085353", cit);
+                    Toast.makeText(MarketPriceDetails.this, "You are not connected to Internet", Toast.LENGTH_SHORT).show();
+                    if(f3!=0) {
+                        Toast.makeText(MarketPriceDetails.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
 
             @Override
@@ -119,10 +138,31 @@ public class MarketPriceDetails extends AppCompatActivity {
         });
 
 
+
     }
 
 
+    protected boolean isOnline() {
 
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void sendSMS(String phoneNumber, String message) {
+        Toast.makeText(MarketPriceDetails.this, "in sendSMS", Toast.LENGTH_SHORT).show();
+
+
+        SmsManager sms = SmsManager.getDefault();
+
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
+
+    }
 
     class customadapter extends BaseAdapter {
 
@@ -213,6 +253,29 @@ public class MarketPriceDetails extends AppCompatActivity {
             return convertview;
         }
 
+
+    }
+    public class SmsReceiver extends BroadcastReceiver {
+        private static final String Tag="Message Receivied";
+
+        public void onReceive(Context context, Intent intent) {
+            final Bundle pdubundle = intent.getExtras();
+
+            Object[]  pdus=(Object[])pdubundle.get("pdus");
+
+            SmsMessage message=SmsMessage.createFromPdu((byte[])pdus[0]);
+            //  Toast.makeText(context,"sms rec from"+message.getOriginatingAddress()+message.getMessageBody(),Toast.LENGTH_LONG).show();
+
+            // tv.setText(add + num);
+
+            msg =message.getMessageBody();
+            func(msg);
+            f3=1;
+            // Toast.makeText(context,"sms rec from"+message.getOriginatingAddress()+message.getMessageBody(),Toast.LENGTH_LONG).show();
+
+        }
+    }
+    public void func(String mm){
 
     }
 }

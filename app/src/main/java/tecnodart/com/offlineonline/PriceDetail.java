@@ -5,7 +5,7 @@ package tecnodart.com.offlineonline;
  */
 
 public class PriceDetail {
-    String commodity, price , quantity;
+    String commodity, price , arrived , remained;
 
     public String getCommodity() {
         return commodity;
@@ -23,12 +23,20 @@ public class PriceDetail {
         this.price = price;
     }
 
-    public String getQuantity() {
-        return quantity;
+    public String getArrived() {
+        return arrived;
     }
 
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
+    public void setArrived(String arrived) {
+        this.arrived = arrived;
+    }
+
+    public String getRemained() {
+        return remained;
+    }
+
+    public void setRemained(String remained) {
+        this.remained = remained;
     }
 
     public PriceDetail() {
