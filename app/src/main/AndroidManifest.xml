@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+                    android:value="@integer/google_play_services_version" />
+                <!--
+             The API key for Google Maps-based APIs.
+       -->
+               <meta-data
+                    android:name="com.google.android.geo.API_KEY"
+                    android:value=" AIzaSyDmx2h3hNlyCfLAwL6u4L3lVUEon6nzpYs " />
         <activity
             android:name=".AfterLoginHome"
             android:label="UBI Quotes"
@@ -27,6 +37,14 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MarketPriceDetails"></activity>
+        <service android:name=".TokenClass">
+        <intent-filter>
+
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+        </intent-filter>
+        </service>
+
+
         <receiver android:name=".MySMSBroadCastReceiver" >
             <intent-filter android:priority="999" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
