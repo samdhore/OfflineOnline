@@ -36,6 +36,7 @@ public class NotificationsFragment extends Fragment {
     RecyclerView.Adapter adapter;
     Notifications notification;
     String title, body;
+    final String TAG="Debug";
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mNotificationRef = mRootRef.child("notifications");
     TextView tv;
@@ -93,10 +94,18 @@ public class NotificationsFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     //  Log.d("xyzr22",commodity);
-
-                    title=snapshot.getKey();
+                    Log.d(TAG,"this executes!");
+                    try {
+                        title = snapshot.getKey();
+                    }catch(Exception e)
+                    {
+                        Log.d(TAG,e.toString());
+                    }
+                    Log.d(TAG,"no problem here");
                     body=snapshot.getValue(String.class);
+                    Log.d(TAG,"body gets value "+body+"title gets value "+title);
                     tv.append("\n"+title+"\n"+body+"\n\n");
+                    Log.d(TAG,"append works fine");
 
                 }
 
