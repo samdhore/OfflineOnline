@@ -1,14 +1,23 @@
 package tecnodart.com.offlineonline;
 
 
+import android.*;
+import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,11 +38,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemSelectedListener {
     Spinner spinner;
-    String  TAG="msp", address="";
+    String  TAG="msp", address="", sms;
     TextView mspDisplay, addressDisplay;
     int msp;
     double latitude,longitude;
@@ -50,6 +62,7 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
     private Location mLastKnownLocation;
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 1;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,10 +88,45 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+        if (checkAndRequestPermissions()) {
+            // carry on the normal flow, as the case of  permissions  granted.
+        }
         Log.d(TAG,"view created");
         return v;
     }
+    private  boolean checkAndRequestPermissions() {
+        int permissionSendMessage = ContextCompat.checkSelfPermission(this.getContext(),
+                android.Manifest.permission.SEND_SMS);
 
+        int receiveSMS = ContextCompat.checkSelfPermission(this.getContext(),
+                android.Manifest.permission.RECEIVE_SMS);
+
+        int readSMS = ContextCompat.checkSelfPermission(this.getContext(),
+                android.Manifest.permission.READ_SMS);
+        int getLocation=ContextCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (receiveSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.RECEIVE_MMS);
+        }
+        if (readSMS != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.READ_SMS);
+        }
+        if (permissionSendMessage != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(android.Manifest.permission.SEND_SMS);
+        }
+        if(getLocation!=PackageManager.PERMISSION_GRANTED)
+        {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this.getActivity(),
+                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -91,59 +139,118 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
         // parent.getItemAtPosition(pos)
         Log.d(TAG, "item selected");
         String commodity=(String)parent.getItemAtPosition(pos);
-        mCommodityRef=mPriceRef.child(commodity);
-        mCommodityRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                msp=dataSnapshot.getValue(Integer.class);
-                Log.d(TAG, Integer.toString(msp));
-                mspDisplay.setText("₹"+msp+"/quintal");
-            }
+        if(isOnline()) {
+            Log.d(TAG,"online execution");
+            Toast.makeText(this.getContext(), "You are connected to Internet", Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            mCommodityRef = mPriceRef.child(commodity);
+            mCommodityRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    msp = dataSnapshot.getValue(Integer.class);
+                    Log.d(TAG, Integer.toString(msp));
+                    mspDisplay.setText("₹" + msp + "/quintal");
+                }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            // Prompt the user for permission.
+            getLocationPermission();
+            getDeviceLocation();
+            if (latitude > 28.00) {
+                mRegionRef = mAddressRef.child("north");
+            } else if (latitude > 14.00) {
+                if (longitude < 80.00) {
+                    mRegionRef = mAddressRef.child("west");
+                } else {
+                    mRegionRef = mAddressRef.child("east");
+                }
+            } else {
+                mRegionRef = mAddressRef.child("south");
             }
-        });
-        // Prompt the user for permission.
-        getLocationPermission();
-        getDeviceLocation();
-        if(latitude>28.00)
-        {
-            mRegionRef=mAddressRef.child("north");
-        }
-        else if(latitude>14.00)
-        {
-            if(longitude<80.00)
-            {
-                mRegionRef=mAddressRef.child("west");
-            }
-            else
-            {
-                mRegionRef=mAddressRef.child("east");
-            }
+            mRegionRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    address = dataSnapshot.getValue(String.class);
+                    addressDisplay.setText(address);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
         else
         {
-            mRegionRef=mAddressRef.child("south");
+            Log.d(TAG,"else executed");
+            // Prompt the user for permission.
+            getLocationPermission();
+            getLocationOffline();
+            sms=smsCreator(commodity,latitude,longitude);
+            sendSMS("7028499108", sms);
+            Log.d(TAG,"control back in else");
+            Toast.makeText(this.getContext(), "You are not connected to Internet", Toast.LENGTH_SHORT).show();
         }
-        mRegionRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                address=dataSnapshot.getValue(String.class);
-                addressDisplay.setText(address);
-            }
+    }
+    //---sends an SMS message to another device---
+    @SuppressWarnings("deprecation")
+    private void sendSMS(String phoneNumber, String message)
+    {
+        Log.v("phoneNumber",phoneNumber);
+        Log.v("message",message);
+       // Log.v("i",Integer.toString(i));
+        Log.d(TAG,"sendSMS executed");
+        PendingIntent pi = PendingIntent.getActivity(this.getContext(), 0,
+                new Intent(this.getContext(),Dummy.class), 0);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        SmsManager sms = SmsManager.getDefault();
 
-            }
-        });
+        sms.sendTextMessage(phoneNumber, null, message, pi, null);
+
 
     }
+    protected boolean isOnline() {
 
+        ConnectivityManager cm = (ConnectivityManager) this.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+    private void getLocationOffline()
+    {
+        Log.d(TAG,"getLocationOffline exectued!");
+        LocationManager lm;
+        Log.d(TAG,"#1");
+        lm = (LocationManager) this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        Log.d(TAG,"#2");
+        Location net_loc = null;
+        Log.d(TAG,"#3");
+        try {
+            Log.d(TAG,"#4");
+            net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(net_loc==null)
+            {
+                Log.d(TAG,"net_loc is null");
+            }
+            Log.d(TAG,"#5");
+            latitude=net_loc.getLatitude();
+            Log.d(TAG,"#6");
+            longitude=net_loc.getLongitude();
+            Log.d(TAG,"#7");
+        }catch(SecurityException s)
+        {
+            Log.d(TAG,"Permission Denied");
+        }
     }
     /**
      * Gets the current location of the device, and positions the map's camera.
@@ -153,6 +260,8 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
+        Log.d(TAG,"getDeviceLocation() executed");
+
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -186,6 +295,7 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
+        Log.d(TAG,"getLocationPermission executed");
         if (ContextCompat.checkSelfPermission(this.getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -195,6 +305,12 @@ public class MinimumSupportPrice extends Fragment implements AdapterView.OnItemS
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
+    }
+    private String smsCreator(String commodity,Double latitude,Double longitude)
+    {
+        String sms;
+        sms="#ubi#"+commodity+"#"+latitude+"#"+longitude;
+        return sms;
     }
 
 
