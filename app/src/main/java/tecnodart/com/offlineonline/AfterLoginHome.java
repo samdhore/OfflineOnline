@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 
 public class AfterLoginHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NotificationsFragment.OnFragmentInteractionListener {
@@ -27,7 +29,7 @@ public class AfterLoginHome extends AppCompatActivity
         setContentView(R.layout.activity_after_login_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        FirebaseMessaging.getInstance().subscribeToTopic("pushNotifications");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -38,6 +40,7 @@ public class AfterLoginHome extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        displaySelectedItem(R.id.home_fragment);
     }
 
     @Override
@@ -78,7 +81,13 @@ public class AfterLoginHome extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        displaySelectedItem(id);
 
+        return true;
+    }
+
+
+    public void displaySelectedItem(int id){
         Fragment f = null;
 
         if (id == R.id.home_fragment) {
@@ -93,6 +102,18 @@ public class AfterLoginHome extends AppCompatActivity
 
         } else if (id == R.id.share) {
 
+            try {
+                Intent sh = new Intent(Intent.ACTION_SEND);
+                sh.setType("text/plain");
+                sh.putExtra(Intent.EXTRA_SUBJECT, "Ubi Quotes");
+                String sAux = "\nWe invite you to join Ubi Quotes\nDownload and Install Ubi Quotes\n";
+                sAux = sAux + "  \nClick below link to download Ubi Quotes App \n " +
+                        "https://drive.google.com/open?id=1aTHwV78iFO_xRn_GTAccpdAkucS5FzCO";
+                sh.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(sh, "choose one"));
+            } catch(Exception e) {
+                //e.toString();
+            }
         } else if (id == R.id.about_fragment) {
 
         }
@@ -110,7 +131,6 @@ public class AfterLoginHome extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     public void onFragmentInteraction(Uri uri)
