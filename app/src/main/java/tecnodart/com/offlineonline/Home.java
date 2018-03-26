@@ -1,24 +1,30 @@
 package tecnodart.com.offlineonline;
 
-import android.support.v7.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-public class Home extends AppCompatActivity {
 
+public class Home extends Fragment {
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.home , container , false) ;
+        return v;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        //Pull request TEST... by Ashutosh Singh
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        //Pull request 2.0... by Ashutosh Singh
-
-        //pull request Test..by Shital Ghanwat
-
-        //pull request test..by shubham burad
-
-
-
+        getActivity().setTitle("Home");
     }
+
 }

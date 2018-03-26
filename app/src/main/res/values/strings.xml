@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">OfflineOnline</string>
+    <string name="title_activity_navigation">Navigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="userid">userID</string>
+    <string name="password">password</string>
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email_id">Email-Id</string>
+    <string name="aadhar_number">Aadhar Number</string>
+    <string name="enter_otp_received">Enter OTP received</string>
+    <string name="submit">SUBMIT</string>
+    <string name="password2">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="title_activity_after_login_home">AfterLoginHome</string>
+    <string-array name="commodity_array">
+        <item>Gram</item>
+        <item>Paddy</item>
+        <item>Sugarcane</item>
+        <item>Wheat</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

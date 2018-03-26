@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_top">
+<item
+    android:id="@+id/notifications"
+    android:icon="@drawable/notific"
+    android:title="My notifications"/>
+    </group>
+    <group android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_fragment"
+            android:icon="@drawable/home"
+            android:title="Home" />
+
+
+
+        <item
+            android:id="@+id/minimum_prize"
+            android:icon="@drawable/rupee"
+            android:title="Minimum Support Price" />
+        <item
+            android:id="@+id/e_mandi"
+            android:icon="@drawable/mandi"
+            android:title="Fair Prices" />
+        <item
+            android:id="@+id/weather_forecast"
+            android:icon="@drawable/weather"
+            android:title="Weather Forecast"/>
+        <item
+            android:id="@+id/scheme"
+            android:icon="@drawable/scheme"
+            android:title="Schemes for me"/>
+        <item
+            android:id="@+id/faq"
+            android:icon="@drawable/faq"
+            android:title="FAQs"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/about_fragment"
+                android:icon="@drawable/about"
+                android:title="About Us" />
+        </menu>
+    </item>
+
+</menu>
